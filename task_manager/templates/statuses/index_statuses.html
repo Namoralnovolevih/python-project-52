@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+
+{% block main %}
+  <main>
+    <h1 class="my-4">{% translate "Statuses" %}</h1>
+
+    <a class="btn btn-primary mb-3" href="{% url 'create_status' %}">{% translate "Create status" %}</a>
+
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>{% translate "Name" %}</th>
+          <th>{% translate "Create date" %}</th>
+          <th></th>
+        </tr>
+      </thead>
+
+      {% for status in statuses %}
+      <tbody>
+          <tr>
+            <td>{{ status.id }}</td>
+            <td>{{ status.name }}</td>
+            <td>{{ status.timestamp }}</td>
+            <td>
+              <a href="{% url 'update_status' status.id %}">{% translate "Change" %}</a>
+              <br>
+              <a href="{% url 'delete_status' status.id %}">{% translate "Delete" %}</a>
+            </td>
+          </tr>
+      </tbody>
+      {% endfor %}
+    </table>
+
+  </main>
+{% endblock %}
