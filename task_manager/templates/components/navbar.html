@@ -1,0 +1,55 @@
+{% load i18n %}
+
+
+<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse d-lg-flex" id="navbarCollapse">
+
+    <ul class="navbar-nav col-lg-9 justify-content-lg-start">
+      <li class="nav-item active">
+        <a class="navbar-brand nav-link" href="{% url 'home' %}">{% translate "Task manger" %}</a>
+      </li>
+      <li class="nav-item active">
+        <a class="nav-link" href="{% url 'index_users' %}">{% translate "Users" %}</a>
+      </li>
+
+      {% if user.is_authenticated %}
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'index_statuses' %}">{% translate "Statuses" %}</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'index_labels' %}">{% translate "Labels" %}</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'index_tasks' %}">{% translate "Tasks" %}</a>
+      </li>
+      {% endif %}
+    </ul>
+
+    <ul class="navbar-nav col-lg-3 justify-content-lg-end">
+    {% if user.is_authenticated %}
+    <li class="nav-item">
+        <a class="nav-link" href="#">{{ user.username }}</a>
+    </li>
+    <li class="nav-item">
+        <form method="post" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <input class="btn nav-link" type="submit" value="{% translate 'Log Out' %}">
+        </form>
+    </li>
+    {% else %}
+    <li class="nav-item">
+      <a class="nav-link" href="{% url 'login' %}">{% translate "Log In" %}</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="{% url 'create_user' %}">{% translate "Sign up" %}</a>
+    </li>
+    {% endif %}
+    </ul>
+
+  </div>
+</nav>
