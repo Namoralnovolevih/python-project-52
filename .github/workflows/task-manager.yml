@@ -1,54 +1,35 @@
 name: task-manager
 
 on:
-  push:
-    branches: [ main ]
+  - push
+  - pull_request
 
 jobs:
   build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.8", "3.9", "3.10"]
-
-    env:
-      DATABASE_URL: ${{ vars.DATABASE_URL }}
-      SECRET_KEY: ${{ vars.SECRET_KEY }}
-
+        # we want to test our package on several versions of Python
+        python-version: ["3.11.9", "3.11.0"]
     steps:
-      - uses: actions/checkout@v3
-      - name: Setup Python ${{ matrix.python-version }}
+      - uses: actions/checkout@v4
+      - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
-
-      - name: Set up Postgresql
-        uses: harmon758/postgresql-action@v1
-        with:
-          postgresql version: '14'
-          postgresql db: postgres
-          postgresql user: postgres
-          postgresql password: postgres
-
-      - name: Start Postgresql
-        run: sudo systemctl start postgresql
-
-      - name: Install poetry and dependencies
+        # make depends on poetry
+      - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip
           pip install poetry
           make install
+          poetry add coverage
 
-      - name: Run linter and test
-        run: |
-          make lint
-          make test
-
-      - name: Test coverage
-        uses: paambaati/codeclimate-action@v3.1.1
+      - name: Test & publish code coverage
+        uses: paambaati/codeclimate-action@v8.0.0
         if: github.ref_name == 'main'
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
+          DEBUG: true
         with:
-          coverageCommand: make test-coverage-xml
-          debug: true
+          coverageCommand: make test-coverage
