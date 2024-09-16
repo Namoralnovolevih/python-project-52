@@ -98,7 +98,7 @@ WSGI_APPLICATION = 'task_manager.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
-
+print(DATABASE_URL)
 DATABASES = {
     'default': dj_database_url.config(
         # Feel free to alter this value to suit your needs.
