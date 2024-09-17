@@ -21,3 +21,7 @@ show-test-coverage:
 
 build:
 	./build.sh
+
+test-coverage:
+	poetry run coverage run manage.py test task_manager
+	poetry run coverage xml
